@@ -1,0 +1,56 @@
+// tell the compiler that we are using protobuffers version 3
+syntax = "proto3";
+
+// a unique package name to avoid polluting the global namespace
+// package todogrpc;
+
+// define todo type message
+message Todo {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  bool done = 4;
+}
+
+// define messages
+message getAllTodoRequest {}
+message getAllTodoResponse {
+  Todo todo = 1;
+}
+
+message saveTodoRequest {
+  Todo todo = 1;
+}
+message saveTodoResponse {
+  bool isOk = 1;
+}
+
+message updateTodoRequest {
+  Todo todo = 1;
+}
+message updateTodoResponse {
+  bool isOk = 1;
+}
+
+message deleteTodoRequest {
+  string id = 1;
+}
+message deleteTodoResponse {
+  bool isOk = 1;
+}
+
+message getTodoByIdRequest {
+  string id = 1;
+}
+message getTodoByIdResponse {
+  Todo todo = 1;
+}
+
+// define remote procedure call(RPC) services
+service TodoService {
+  rpc GetAllTodos (getAllTodoRequest) returns (stream getAllTodoResponse);
+  rpc SaveTodo (saveTodoRequest) returns (saveTodoResponse);
+  rpc UpdateTodo (updateTodoRequest) returns (updateTodoResponse);
+  rpc DeleteTodo (deleteTodoRequest) returns (deleteTodoResponse);
+  rpc GetTodoById (getTodoByIdRequest) returns (getTodoByIdResponse);
+}

@@ -1,0 +1,17 @@
+{
+  "name": "todo-grpc-server",
+  "version": "1.0.0",
+  "description": "todo grpc server, part 1 step 3 in ultimate todo app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Abid Ali",
+  "license": "MIT",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.3.0",
+    "grpc": "^1.15.1",
+    "mongoose": "^5.2.16"
+  }
+}
