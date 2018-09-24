@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");
+const DBConnect = require('./dbConnection');
+const db = new DBConnect();
+db.mongoDB(); // connects to mongodb
 const TodoModel = require("../models/TodoModel");
 class TodoDbClass {
   constructor(payload) {

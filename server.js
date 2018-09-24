@@ -1,22 +1,13 @@
 const path = require("path");
-const mongoose = require("mongoose");
-mongoose
-  .connect(
-    "mongodb://localhost:27017/grpcTodo",
-    { useNewUrlParser: true }
-  )
-  .then(function() {
-    console.log("mongodb connected");
-  })
-  .catch(function(err) {
-    console.log("Error in mongodb connection", err);
-  });
 const PROTO_PATH = path.join("proto", "todoService.proto");
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
 const serviceDefinition = protoLoader.loadSync(PROTO_PATH);
 const PORT = 9000;
-const TodoDb = require("./classes/todoDBClass");
+// const TodoDb = require("./classes/todoDBClass"); //mongodb class
+const TodoDb = require("./classes/todoDBClassSql"); //postgredb class
+
+// const TodoDb = TodoDbClassPSQL;
 /*
   // to create secure server, need certificates for ssl, I have created self signed certificates with open ssl
   const cacert = fs.readFileSync("certs/ca.crt"),
@@ -52,14 +43,16 @@ function saveTodo(call, callback) {
     description: incomingTodo.description,
     done: incomingTodo.done
   };
+  console.log('saveTodo on server initiated');
   let db = new TodoDb(payload);
+  console;
   db.saveTodo()
     .then(function() {
       // no need to send todo back to client.
       callback(null, { isOk: true });
     })
     .catch(function(err) {
-      callback(err, null);
+      callback(err, {isOk: false});
     });
 }
 
@@ -70,7 +63,7 @@ function getAllTodos(call) {
       // no need to send todo back to client.
       todos.forEach(function(todo) {
         let todoToSend = {
-          id: todo._id,
+          id: todo._id ? todo._id : todo.id,
           title: todo.title,
           description: todo.description,
           done: todo.done
@@ -82,39 +75,6 @@ function getAllTodos(call) {
     .catch(function(err) {
       // handle error -> some sort of logging function can be called here.
       console.log(err);
-    });
-}
-
-function updateTodo(call, callback) {
-  let incomingTodo = call.request.todo;
-  let db = new TodoDb(incomingTodo);
-  db.updateTodo()
-    .then(function(result) {
-      callback(null, { isOk: true });
-    })
-    .catch(function(err) {
-      // handle error -> some sort of logging
-      console.log(err);
-      let error = new Error(
-        "Unable to update the todo, make sur you are requesting the correct resource to be updated"
-      );
-      callback(error, null);
-    });
-}
-function deleteTodo(call, callback) {
-  let todoId = call.request.id;
-  let db = new TodoDb({ id: todoId });
-  db.deleteTodo()
-    .then(function() {
-      callback(null, { isOk: true });
-    })
-    .catch(function(err) {
-      // handle error.
-      console.log(err);
-      let error = new Error(
-        "Unable to delete task, please check if you are making a valid request of deletion"
-      );
-      callback(error, null);
     });
 }
 
@@ -134,5 +94,39 @@ function getTodoById(call, callback) {
       );
       callback(error, null);
     });
-  // 5ba493b2be19db1960b6f518
 }
+
+function updateTodo(call, callback) {
+  let incomingTodo = call.request.todo;
+  let db = new TodoDb(incomingTodo);
+  db.updateTodo()
+    .then(function(result) {
+      callback(null, { isOk: true });
+    })
+    .catch(function(err) {
+      // handle error -> some sort of logging
+      console.log(err);
+      let error = new Error(
+        "Unable to update the todo, make sur you are requesting the correct resource to be updated"
+      );
+      callback(error, null);
+    });
+}
+
+function deleteTodo(call, callback) {
+  let todoId = call.request.id;
+  let db = new TodoDb({ id: todoId });
+  db.deleteTodo()
+    .then(function() {
+      callback(null, { isOk: true });
+    })
+    .catch(function(err) {
+      // handle error.
+      console.log(err);
+      let error = new Error(
+        "Unable to delete task, please check if you are making a valid request of deletion"
+      );
+      callback(error, null);
+    });
+}
+
