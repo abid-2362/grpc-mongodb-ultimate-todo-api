@@ -106,8 +106,11 @@ class TodoDbClassPSQL {
     let $this = this;
     let client = $this.client;
     return new Promise(function(resolve, reject) {
-      const { title, description, done } = $this.payload;
-      const id = $this.payload._id;
+      let { title, description, done } = $this.payload;
+      if (!done) {
+        done = false;
+      }
+      const id = $this.payload.id;
       (async function() {
         try {
           const response = await client.query(
@@ -129,34 +132,25 @@ class TodoDbClassPSQL {
   }
 
   deleteTodo(req, res) {
+    let $this = this;
     let client = $this.client;
-    const { id } = req.params;
-    (async function() {
-      try {
-        const response = await client.query(
-          `DELETE FROM todo_info WHERE ID = $1`,
-          [id]
-        );
-        client.end();
-        const resSend = response.rowCount
-          ? { message: "Todo deleted successfully", status: true }
-          : {
-              message:
-                "Unable deleted a todo, it might already have been deleted",
-              status: false
-            };
-        res.status(200).send([resSend]);
-      } catch (err) {
-        res.status(500).send([
-          {
-            message:
-              "Unable deleted a todo, it might already have been deleted",
-            status: false
-          },
-          err
-        ]);
-      }
-    })();
+    return new Promise(function(resolve, reject) {
+      const id = $this.payload.id;
+      (async function() {
+        try {
+          const response = await client.query(
+            `DELETE FROM todo_info WHERE ID = $1`,
+            [id]
+          );
+          client.end();
+          const resSend = response.rowCount ? true : false;
+          if(resSend) resolve(resSend);
+          else reject('Already deleted');
+        } catch (err) {
+          reject(err);
+        }
+      })();
+    });
   }
 }
 

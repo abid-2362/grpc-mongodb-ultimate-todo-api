@@ -101,6 +101,8 @@ function updateTodo(call, callback) {
   let db = new TodoDb(incomingTodo);
   db.updateTodo()
     .then(function(result) {
+      // to send updated tod back to client,
+      // proto must be updated.
       callback(null, { isOk: true });
     })
     .catch(function(err) {
