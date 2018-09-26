@@ -11,15 +11,13 @@ class TodoDbClassPSQL {
   }
 
   saveTodo() {
-    console.log("saveTodo initiated");
-    // return;
     let $this = this;
     return new Promise(function(resolve, reject) {
       let client = $this.client;
       const task = $this.payload;
       let id;
-      if ($this.payload._id) {
-        id = $this.payload._id;
+      if ($this.payload.id) {
+        id = $this.payload.id;
       } else {
         id = null;
       }
@@ -131,7 +129,7 @@ class TodoDbClassPSQL {
     });
   }
 
-  deleteTodo(req, res) {
+  deleteTodo() {
     let $this = this;
     let client = $this.client;
     return new Promise(function(resolve, reject) {

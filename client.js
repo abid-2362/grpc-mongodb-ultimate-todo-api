@@ -26,9 +26,6 @@ const client = new serviceDefinition.TodoService(
 );
 
 const option = parseInt(process.argv[2], 10);
-// mongodb id = "5ba493b2be19db1960b6f518"
-// let id = "5ba493b2be19db1960b6f518";
-// posgreSQL id = 1234;
 const id = "1234";
 switch (option) {
   case 1:
@@ -92,7 +89,7 @@ function getAllTodos(client) {
 */
 
 function getTodoById(client, id) {
-  console.log(client, id);
+  // console.log(client, id);
   client.getTodoById({ id: id }, function(err, todo) {
     if (err) console.log(err);
     else console.log(todo);

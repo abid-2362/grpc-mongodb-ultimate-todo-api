@@ -11,7 +11,14 @@ class TodoDbClass {
   saveTodo() {
     let $this = this;
     return new Promise(function(resolve, reject) {
-      let todoToSave = new $this.TodoModel($this.payload);
+      let incomingTodo =  $this.payload;
+      let saveTodo = {
+        _id: incomingTodo.id,
+        title: incomingTodo.title,
+        description: incomingTodo.description,
+        done: incomingTodo.done
+      }
+      let todoToSave = new $this.TodoModel(saveTodo);
       todoToSave.save(function(err, todo) {
         if (err) reject(err);
 

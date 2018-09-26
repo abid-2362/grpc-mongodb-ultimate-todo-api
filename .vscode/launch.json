@@ -1,0 +1,44 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch current file w/ jest",
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest",
+      "env": {
+        "TS_NODE_PROJECT": "src/tsconfig.specs.json"
+      },
+      "args": [
+        "--detectOpenHandles",
+        "--colors",
+        "ts-node/register",
+        "${relativeFile}"
+      ],
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch server file w/ ts-node",
+      "protocol": "inspector",
+      // "args": ["${relativeFile}"],
+      "args": ["${workspaceRoot}/server.js"],
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      // "program": "${workspaceRoot}/app/server.ts",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch current file w/ ts-node",
+      "protocol": "inspector",
+      "args": ["${relativeFile}"],
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "internalConsoleOptions": "openOnSessionStart"
+    }
+  ]
+}

@@ -39,11 +39,11 @@ server.start();
 function saveTodo(call, callback) {
   let incomingTodo = call.request.todo;
   let payload = {
+    id: incomingTodo.id,
     title: incomingTodo.title,
     description: incomingTodo.description,
     done: incomingTodo.done
   };
-  console.log('saveTodo on server initiated');
   let db = new TodoDb(payload);
   console;
   db.saveTodo()
@@ -101,7 +101,7 @@ function updateTodo(call, callback) {
   let db = new TodoDb(incomingTodo);
   db.updateTodo()
     .then(function(result) {
-      // to send updated tod back to client,
+      // to send updated todo back to client,
       // proto must be updated.
       callback(null, { isOk: true });
     })
